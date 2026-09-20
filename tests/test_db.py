@@ -22,6 +22,7 @@ def temp_db(tmp_path, monkeypatch):
 
 def test_init_db_creates_table():
     from db import DB_NAME
+
     with sqlite3.connect(DB_NAME) as conn:
         cur = conn.cursor()
         cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
@@ -42,6 +43,7 @@ def test_save_rate_update_existing():
 
 def test_save_rate_date_format():
     from db import DB_NAME
+
     save_rate(1, "USD", 90.5)
     with sqlite3.connect(DB_NAME) as conn:
         cur = conn.cursor()
@@ -67,6 +69,7 @@ def test_save_rate_edge_cases():
 def test_save_rate_database_connection_error(monkeypatch):
     def broken_connect(*args, **kwargs):
         raise sqlite3.OperationalError("connection failed")
+
     monkeypatch.setattr(sqlite3, "connect", broken_connect)
     with pytest.raises(sqlite3.OperationalError):
         save_rate(1, "USD", 90.5)
@@ -74,14 +77,22 @@ def test_save_rate_database_connection_error(monkeypatch):
 
 def test_save_rate_commit_error(monkeypatch):
     class FakeConn:
-        def __enter__(self): return self
-        def __exit__(self, *args): return False
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
         def cursor(self):
             class Cur:
-                def execute(self, *args, **kwargs): pass
+                def execute(self, *args, **kwargs):
+                    pass
+
             return Cur()
+
         def commit(self):
             raise sqlite3.OperationalError("commit failed")
+
     monkeypatch.setattr(sqlite3, "connect", lambda *a, **kw: FakeConn())
     with pytest.raises(sqlite3.OperationalError):
         save_rate(1, "USD", 90.5)
@@ -138,6 +149,7 @@ def test_get_saved_rate_sql_injection_protection():
 def test_get_saved_rate_database_connection_error(monkeypatch):
     def broken_connect(*args, **kwargs):
         raise sqlite3.OperationalError("connection failed")
+
     monkeypatch.setattr(sqlite3, "connect", broken_connect)
     with pytest.raises(sqlite3.OperationalError):
         get_saved_rate("USD")

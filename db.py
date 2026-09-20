@@ -24,13 +24,16 @@ def save_rate(id: int, target_currency: str, rate: float) -> None:
     date_str = datetime.now().isoformat()
     with sqlite3.connect(DB_NAME) as conn:
         cur = conn.cursor()
-        cur.execute("""
+        cur.execute(
+            """
             INSERT INTO rates (id, currency, rate, fetched_at)
             VALUES (?, ?, ?, ?)
             ON CONFLICT(id) DO UPDATE SET
                 rate = excluded.rate,
                 fetched_at = excluded.fetched_at
-        """, (id, target_currency, rate, date_str))
+        """,
+            (id, target_currency, rate, date_str),
+        )
         conn.commit()
 
 

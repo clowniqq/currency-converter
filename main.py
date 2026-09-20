@@ -41,13 +41,18 @@ class CurrencyConverterApp(tk.Tk):
         ttk.Label(self, text="Мес.").grid(row=1, column=2, sticky="w", **pad)
 
         # Процентная ставка
-        ttk.Label(self, text="Процентная ставка:").grid(row=2, column=0, sticky="w", **pad)
-        ttk.Entry(self, textvariable=self.annual_interest_var).grid(row=2, column=1, **pad)
+        ttk.Label(self, text="Процентная ставка:").grid(
+            row=2, column=0, sticky="w", **pad
+        )
+        ttk.Entry(self, textvariable=self.annual_interest_var).grid(
+            row=2, column=1, **pad
+        )
         ttk.Label(self, text="%").grid(row=2, column=2, sticky="w", **pad)
 
         # Кнопка расчёта
-        ttk.Button(self, text="Рассчитать", command=self.calculate_loan)\
-            .grid(row=3, column=0, columnspan=3, pady=6)
+        ttk.Button(self, text="Рассчитать", command=self.calculate_loan).grid(
+            row=3, column=0, columnspan=3, pady=6
+        )
 
         # Результаты расчёта
         self.monthly_label = ttk.Label(self, text="Ежемесячный платеж: 0 RUB")
@@ -61,24 +66,30 @@ class CurrencyConverterApp(tk.Tk):
 
         # Базовая валюта
         ttk.Label(self, text="Базовая валюта:").grid(row=7, column=0, sticky="w", **pad)
-        ttk.Label(self, textvariable=self.base_var).grid(row=7, column=1, sticky="w", **pad)
+        ttk.Label(self, textvariable=self.base_var).grid(
+            row=7, column=1, sticky="w", **pad
+        )
 
         # Целевая валюта
         ttk.Label(self, text="Целевая валюта:").grid(row=8, column=0, sticky="w", **pad)
-        self.target_entry = ttk.Combobox(self, textvariable=self.target_var, state="readonly")
+        self.target_entry = ttk.Combobox(
+            self, textvariable=self.target_var, state="readonly"
+        )
         self.target_entry.grid(row=8, column=1, **pad)
 
         # Кнопка конвертации
-        ttk.Button(self, text="Конвертировать", command=self.convert)\
-            .grid(row=9, column=0, columnspan=3, pady=4)
+        ttk.Button(self, text="Конвертировать", command=self.convert).grid(
+            row=9, column=0, columnspan=3, pady=4
+        )
 
         # Результат конвертации
         self.result_label = ttk.Label(self, text="")
         self.result_label.grid(row=10, column=0, columnspan=3, sticky="w", **pad)
 
         # Кнопка обновления курсов
-        ttk.Button(self, text="Обновить курсы", command=self.update_db)\
-            .grid(row=11, column=0, columnspan=3, pady=6)
+        ttk.Button(self, text="Обновить курсы", command=self.update_db).grid(
+            row=11, column=0, columnspan=3, pady=6
+        )
 
         # Логгер
         self.log_text = tk.Text(self, height=8)
@@ -109,9 +120,11 @@ class CurrencyConverterApp(tk.Tk):
             self.log("Ошибка: введите корректные числа")
             return
 
-        if (self.is_loan_invalid(loan, "Сумма должна быть > 0")
-                or self.is_loan_invalid(months, "Срок должен быть > 0")
-                or self.is_loan_invalid(rate, "Процентная ставка должна быть > 0")):
+        if (
+            self.is_loan_invalid(loan, "Сумма должна быть > 0")
+            or self.is_loan_invalid(months, "Срок должен быть > 0")
+            or self.is_loan_invalid(rate, "Процентная ставка должна быть > 0")
+        ):
             return
 
         monthly_rate = rate / 100 / 12
