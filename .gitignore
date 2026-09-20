@@ -1,0 +1,9 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.idea/
+*.db
+*.sqlite
+*.sqlite3
+rates.db
